@@ -1,4 +1,4 @@
-# implementing-lisp
+# implementing-scheme
 
 - We shall only deal with integers, symbols, functions, and list.
 
