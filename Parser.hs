@@ -2,7 +2,7 @@ import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
 
 
--- this ```symbol``` _is_ a parser
+-- we'll define a parser that recognizes one of the symbols allowed in Scheme identifiers:
 symbol :: Parser Char
 symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
 
