@@ -1,4 +1,4 @@
-# implementing-scheme
+# Implementing an interpreter for Scheme in Haskell
 
 Notes I made while learning how to write a Scheme interpreter, using the book 
 
@@ -184,3 +184,5 @@ parseExpr = parseAtom
 
 
 # Evaluation
+
+*in progress*
