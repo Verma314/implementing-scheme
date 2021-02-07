@@ -1,9 +1,10 @@
 # implementing-scheme
 
+Notes I made while learning how to write a Scheme interpreter, using the book 
 
-## Parser
+https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
 
-- We shall only deal with integers, symbols, functions, and list.
+# Parser
 
 - Haskell comes standard with a parsing library called ```Parsec``` which implements a domain specific language for parsing text.
 
@@ -182,3 +183,4 @@ parseExpr = parseAtom
 ```                
 
 
+# Evaluation
