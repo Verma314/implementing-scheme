@@ -170,6 +170,9 @@ parseQuoted = do
 ```
 
 ### Putting all our mini-parsers together
+
+The key function that parses our strings, classifies them implicity, and returns a ``` Parser LispVal```
+
 ```
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
@@ -185,4 +188,6 @@ parseExpr = parseAtom
 
 # Evaluation
 
-*in progress*
+"The purpose of an evaluator is to map some "code" data type into some "data" data type, the result of the evaluation.
+
+In Lisp, the data types for both code and data are the same, so our evaluator will return a LispVal"

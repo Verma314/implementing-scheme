@@ -1,3 +1,5 @@
+module Parser where                              
+
 import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
 import Control.Monad
@@ -25,12 +27,41 @@ readExpr_ input = case parse (spaces >> symbol) "lisp" input of
 --- a data type to hold any lisp values ---
 -------------------------------------------
 
+-- this is the target state, we wanna parse our input strings into one of these
 data LispVal = Atom String
              | List [LispVal]
              | DottedList [LispVal] LispVal -- representing the Scheme form (a b . c); also called an improper list. This stores a list of all elements but the last, and then stores the last element as another field
              | Number Integer
              | String String
-             | Bool Bool deriving (Show)
+             | Bool Bool -- deriving (Show)
+
+
+
+-- this is so that _after_ we have our target LispVal, we can convert them back into nice syntax
+showVal :: LispVal -> String
+showVal (String contents) = "\"" ++ contents ++ "\""
+showVal (Atom name) = name
+showVal (Number contents) = show contents
+showVal (Bool True) = "#t"
+showVal (Bool False) = "#f"
+showVal (List lispExprList) = "(" ++ unwordsList lispExprList ++ ")"
+showVal (DottedList head tail) = "(" ++ unwordsList head ++ " . " ++ showVal tail ++ ")"
+
+--helper fxn:
+unwordsList :: [LispVal] -> String
+unwordsList listOfLispExprs = unwords (map showVal listOfLispExprs)
+{-
+> x = [Atom "a", Atom "b", Atom "c"]
+>
+> unwordsList x
+"a b c"
+-}
+
+-- instantiate show for LispVal type, so that when parser recognizes the values, 
+   -- it doesn't show their representation in weird haskell syntax.
+       -- it prints out the values in beautiful LISP-like syntax
+instance Show LispVal where show = showVal
+
 
 
 
@@ -110,6 +141,7 @@ parseQuoted = do
 ----- Putting our mini parsers together -----
 ---------------------------------------------
 
+-- the key function that parses our strings, classifies them implicity, and returns a ``` Parser LispVal```
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
          <|> parseString
@@ -120,11 +152,15 @@ parseExpr = parseAtom
                 char ')'
                 return x
 
-readExpr :: String -> String
-readExpr input = case parse parseExpr "lisp" input of
+readExpr_old' :: String -> String
+readExpr_old' input = case parse parseExpr "lisp" input of
     Left err -> "No match: " ++ show err
     Right _ -> "Found value"
 
+
+readExpr input = case parse parseExpr "lisp" input of
+    Left err -> "No match: " ++ show err
+    Right val -> "Found " ++ show val
 
 main :: IO ()
 main = do 
