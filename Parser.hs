@@ -157,14 +157,20 @@ readExpr_old' input = case parse parseExpr "lisp" input of
     Left err -> "No match: " ++ show err
     Right _ -> "Found value"
 
-
-readExpr input = case parse parseExpr "lisp" input of
+readExpr_old'' input = case parse parseExpr "lisp" input of
     Left err -> "No match: " ++ show err
-    Right val -> "Found " ++ show val
+    Right val -> "Found " ++ show val -- no need to a "show" val as well, we can return the actual LispVal
 
-main :: IO ()
-main = do 
+readExpr :: String -> LispVal
+readExpr input = case parse parseExpr "lisp" input of
+    Left err -> String $ "No match: " ++ show err
+    Right val ->  val 
+
+
+{-
+main_old :: IO ()
+main_old = do 
          (expr:_) <- getArgs
          putStrLn (readExpr expr)
 
-
+-}
