@@ -186,8 +186,37 @@ parseExpr = parseAtom
 ```                
 
 
+
+### Reading the input
+
+This function literally converts the input into a Haskell type.
+
+This uses the ```parseExpr``` to parse the input, 
+the ```parse``` function returns an ```Either String (Parser LispVal)```.
+
+```
+readExpr :: String -> LispVal
+readExpr input = case parse parseExpr "lisp" input of
+    Left err -> String $ "No match: " ++ show err
+    Right val ->  val 
+```
+
+
+
 # Evaluation
 
 "The purpose of an evaluator is to map some "code" data type into some "data" data type, the result of the evaluation.
 
-In Lisp, the data types for both code and data are the same, so our evaluator will return a LispVal"
+In Lisp, the data types for both code and data are the same, so our evaluator will return a LispVal
+
+Evaluating numbers, strings, booleans, and quoted lists is fairly simple: return the datum itself."
+
+
+**Status of the interpreter so far**
+
+Parser's readExpr now can read input and return a LispVal, instead of String. Eval can take these LispVals and evaluate them (KINDOF). Main.hs is now used to call the parsing method (readExpr) and the evaluation method (eval)
+
+
+## Adding basic primitives
+
+*in progress*
