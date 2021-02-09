@@ -11,3 +11,9 @@ main = getArgs >>= print . eval . readExpr . head
 mainGhci :: String -> IO ()
 mainGhci inputExpr = do 
                      (print . eval. readExpr ) inputExpr
+
+repl :: IO ()
+repl = do 
+       inputStrs <- getLine
+       (print . eval . readExpr )  inputStrs
+       repl
