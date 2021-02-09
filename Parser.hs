@@ -28,7 +28,7 @@ readExpr_ input = case parse (spaces >> symbol) "lisp" input of
 -------------------------------------------
 
 -- this is the target state, we wanna parse our input strings into one of these
-data LispVal = Atom String
+data LispVal = Atom String -- function names are represted as an Atom
              | List [LispVal]
              | DottedList [LispVal] LispVal -- representing the Scheme form (a b . c); also called an improper list. This stores a list of all elements but the last, and then stores the last element as another field
              | Number Integer

@@ -219,4 +219,23 @@ Parser's readExpr now can read input and return a LispVal, instead of String. Ev
 
 ## Adding basic primitives
 
+This shall help us evaluate LispVals, and then return a LispVal.
+
+```
+eval :: LispVal -> LispVal
+eval val@(Atom _) = val -- this is not correct
+eval val@(String _) = val
+eval val@(Number _) = val
+eval val@(Bool _) = val
+eval (List [Atom "quote", val]) = val --  The last clause is our first introduction to nested patterns. The type of data contained by List is [LispVal], a list of LispVals. We match that against the specific two-element list [Atom "quote", val], a list where the first element is the symbol "quote" and the second element can be anything. Then we return that second element.
+-- this belwo is for function evaluation, like (+ 1 2), which is LispVal terms is written like - [Atom "+",Number 1, Number 3]
+-- we first evaluate the args too.
+-- and then apply the operator to the result
+eval (List ((Atom operator) : args)) =  apply operator $ map eval args
+```
+
+Read Eval.hs for more info. The code is well commented.
+
+# Error Checking and Exceptions
+
 *in progress*
