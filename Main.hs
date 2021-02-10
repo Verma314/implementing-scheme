@@ -1,5 +1,8 @@
+module Main where  
+
 import Parser
 import Eval
+import ErrorCatcher
 
 import Control.Monad
 import System.Environment
