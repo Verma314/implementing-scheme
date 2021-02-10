@@ -163,7 +163,7 @@ readExpr_old'' input = case parse parseExpr "lisp" input of
 
 readExpr :: String -> LispVal
 readExpr input = case parse parseExpr "lisp" input of
-    Left err -> String $ "No match: " ++ show err
+    Left err -> String $ "No match: " ++ show err -- this err, actually is of type ParseError and belongs to the module Text.ParserCombinators.Parsec
     Right val ->  val 
 
 
