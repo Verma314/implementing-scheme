@@ -4,6 +4,7 @@ import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
 import Control.Monad
 
+--import ErrorCatcher
 
 ----------------------------------
 ------ a parser for symbols ------
@@ -161,10 +162,20 @@ readExpr_old'' input = case parse parseExpr "lisp" input of
     Left err -> "No match: " ++ show err
     Right val -> "Found " ++ show val -- no need to a "show" val as well, we can return the actual LispVal
 
+
+-- @WithoutErrorHandling
 readExpr :: String -> LispVal
 readExpr input = case parse parseExpr "lisp" input of
     Left err -> String $ "No match: " ++ show err -- this err, actually is of type ParseError and belongs to the module Text.ParserCombinators.Parsec
     Right val ->  val 
+
+{-
+-- @ErrorHandling
+readExpr :: String -> ThrowError LispVal
+readExpr input = case parse parseExpr "lisp" input of 
+    Left err -> throwError ( Parser err)
+
+-}
 
 
 {-
