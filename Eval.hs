@@ -1,19 +1,22 @@
 module Eval where
 
 import Parser    
+import ErrorCatcher
 
 
 -- this shall help us evaluate LispVals, and then return a LispVal
-eval :: LispVal -> LispVal
-eval val@(Atom _) = val -- this is not correct
-eval val@(String _) = val
-eval val@(Number _) = val
-eval val@(Bool _) = val
-eval (List [Atom "quote", val]) = val --  The last clause is our first introduction to nested patterns. The type of data contained by List is [LispVal], a list of LispVals. We match that against the specific two-element list [Atom "quote", val], a list where the first element is the symbol "quote" and the second element can be anything. Then we return that second element.
+eval :: LispVal -> ThrowsError LispVal
+eval val@(Atom _) = return val -- this is not correct
+eval val@(String _) = return val
+eval val@(Number _) = return val
+eval val@(Bool _) = return val
+eval (List [Atom "quote", val]) = return val --  The last clause is our first introduction to nested patterns. The type of data contained by List is [LispVal], a list of LispVals. We match that against the specific two-element list [Atom "quote", val], a list where the first element is the symbol "quote" and the second element can be anything. Then we return that second element.
 -- this belwo is for function evaluation, like (+ 1 2), which is LispVal terms is written like - [Atom "+",Number 1, Number 3]
 -- we first evaluate the args too.
 -- and then apply the operator to the result
-eval (List ((Atom operator) : args)) =  apply operator $ map eval args
+eval (List ((Atom operator) : args)) =  mapM eval args >>= apply operator
+eval badForm = throwError $ BadSpecialForm "Unrecognized special form" badForm
+
 
 {-------------------------------
 
@@ -32,8 +35,15 @@ the maybe function applies the $ lispVals to it
 something like: (removeContext (lookup operator primitives) $ lispVals)
 
 --------------------------------}
-apply :: String -> [LispVal] -> LispVal
-apply operator lispVals = maybe (Bool False) ($ lispVals) (lookup operator primitives)
+
+apply :: String -> [LispVal] -> ThrowsError LispVal
+apply operator lispVals = maybe (throwError $ NotFunction "Unrecognized primitive function args" func)
+                                ($ lispVals )
+                                (lookup operator primitives)
+                                
+
+apply' :: String -> [LispVal] -> LispVal
+apply' operator lispVals = maybe (Bool False) ($ lispVals) (lookup operator primitives)
 
 
 -- primitives is a Map/Dictionary
