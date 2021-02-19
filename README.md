@@ -262,9 +262,9 @@ Read Eval.hs for more info. The code is well commented.
 done:
 
 - converted readExpr and Eval to use proper error handling
+- modify primitives, and numericBinop to do the same 
 
 todo:
 
-- modify primitives, and numericBinop to do the same
 
 - after error handling is complete, go through the entire codebase, refactor it for readability, add docs and explanations

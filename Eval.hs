@@ -2,7 +2,7 @@ module Eval where
 
 import Parser    
 import ErrorCatcher
-
+import Control.Monad.Except
 
 -- this shall help us evaluate LispVals, and then return a LispVal
 eval :: LispVal -> ThrowsError LispVal
@@ -36,19 +36,25 @@ something like: (removeContext (lookup operator primitives) $ lispVals)
 
 --------------------------------}
 
+-- new @ErrorHandling
 apply :: String -> [LispVal] -> ThrowsError LispVal
-apply operator lispVals = maybe (throwError $ NotFunction "Unrecognized primitive function args" func)
+apply operator lispVals = maybe (throwError $ NotFunction "Unrecognized primitive function args" operator)
                                 ($ lispVals )
                                 (lookup operator primitives)
                                 
+-- old @WithoutErrorHandling
+--apply' :: String -> [LispVal] -> LispVal
+--apply' operator lispVals = maybe (Bool False) ($ lispVals) (lookup operator primitives)
 
-apply' :: String -> [LispVal] -> LispVal
-apply' operator lispVals = maybe (Bool False) ($ lispVals) (lookup operator primitives)
 
 
+-- new @ErrorHandling
+-- primitives' :: [(String, [LispVal] -> ThrowsError LispVal)]
+
+-- old @WithoutErrorHandling
 -- primitives is a Map/Dictionary
 -- values of the pairs are functions from [LispVal] to LispVal
-primitives :: [(String, [LispVal] -> LispVal)]
+primitives :: [(String, [LispVal] -> ThrowsError LispVal)]
 primitives = [("+", numericBinop (+)),
               ("-", numericBinop (-)),
               ("*", numericBinop (*)),
@@ -58,25 +64,47 @@ primitives = [("+", numericBinop (+)),
               ("remainder", numericBinop rem)]
 
 
+
+
+numericBinop :: (Integer -> Integer -> Integer) -> [LispVal] -> ThrowsError LispVal
+numericBinop op           []  = throwError $ NumArgs 2 []
+numericBinop op singleVal@[_] = throwError $ NumArgs 2 singleVal
+numericBinop op params = mapM unpackNum params >>= return . Number . foldl1 op
+
+
+-- old @WithoutErrorHandling
 -- numericBinop takes a primitive function (like +,-,etc)
 -- and wraps it with code to unpack an argument list, 
 -- apply the function to it, and wrap the result up in our Number constructor
-numericBinop :: (Integer -> Integer -> Integer) -> [LispVal] -> LispVal
-numericBinop op params = Number $ foldl1 op  $ map unpackNum params
+--numericBinop' :: (Integer -> Integer -> Integer) -> [LispVal] -> LispVal
+--numericBinop' op params = Number $ foldl1 op  $ map unpackNum params
 
 {-------------
 How does parsed work?
 > parsed "12345"
 [(12345,"")]
 -----------}
-unpackNum :: LispVal -> Integer
-unpackNum (Number n) = n
-unpackNum (String n) = let parsed = reads n :: [(Integer, String)] in 
+
+unpackNum :: LispVal -> ThrowsError Integer
+unpackNum (Number n) = return n
+unpackNum (String n) = let parsed = reads n in 
+                           if null parsed 
+                             then throwError $ TypeMismatch "number" $ String n
+                             else return $ fst $ parsed !! 0
+unpackNum (List [n]) = unpackNum n
+unpackNum notNum     = throwError $ TypeMismatch "number" notNum
+
+{-
+unpackNum' :: LispVal -> Integer
+unpackNum' (Number n) = n
+unpackNum' (String n) = let parsed = reads n :: [(Integer, String)] in 
                            if null parsed 
                               then 0
                               else fst $ parsed !! 0 
-unpackNum (List [n]) = unpackNum n
-unpackNum _ = 0                               
+unpackNum' (List [n]) = unpackNum n
+unpackNum' _ = 0  
+
+-}
 {-
 
 Now we can do this,

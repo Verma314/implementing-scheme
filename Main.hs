@@ -13,16 +13,27 @@ import System.Environment
 -- 1. We deprecated readExpr 
 -- 
 
--- getArgs does not work inside ghci
-main :: IO ()
-main = getArgs >>= print . eval . readExpr . head
 
+main :: IO ()
+main = do
+     args <- getArgs
+     evaled <- return $ liftM show $ readExpr2 (args !! 0) >>= eval
+     putStrLn $ extractValue $ trapError evaled
+
+-- getArgs does not work inside ghci
+main' :: IO ()
+main' = getArgs >>= print . eval . readExpr . head
+
+
+{-
 mainGhci :: String -> IO ()
 mainGhci inputExpr = do 
                      (print . eval. readExpr ) inputExpr
+-}
 
 repl :: IO ()
 repl = do 
        inputStrs <- getLine
-       (print . eval . readExpr2 )  inputStrs
+       evaled <- return $ liftM  show $ readExpr2   (inputStrs ) >>= eval
+       putStrLn $ extractValue $ trapError evaled
        repl
