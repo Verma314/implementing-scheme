@@ -56,6 +56,8 @@ unwordsList listOfLispExprs = unwords (map showVal listOfLispExprs)
 >
 > unwordsList x
 "a b c"
+> unwordsList [Bool True, Bool False]
+"#t #f"
 -}
 
 -- instantiate show for LispVal type, so that when parser recognizes the values, 
@@ -137,6 +139,8 @@ parseQuoted = do
     x <- parseExpr
     return $ List [Atom "quote", x]
 
+-- > readExpr "'2"
+-- (quote 2)
 
 ---------------------------------------------
 ----- Putting our mini parsers together -----

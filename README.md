@@ -251,7 +251,13 @@ Read Eval.hs for more info. The code is well commented.
 
 # Error Checking and Exceptions
 
+(self explnatory. read comments in ErrorCatcher.hs to figure out Error handling)
+
+
+# Partial Application, Conditionals, List Operations
+
 *in progress*
+
 
 
 
