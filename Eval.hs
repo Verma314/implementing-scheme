@@ -65,13 +65,27 @@ apply operator lispVals = maybe (throwError $ NotFunction "Unrecognized primitiv
 -- primitives is a Map/Dictionary
 -- values of the pairs are functions from [LispVal] to LispVal
 primitives :: [(String, [LispVal] -> ThrowsError LispVal)]
-primitives = [("+", numericBinop (+)),
-              ("-", numericBinop (-)),
-              ("*", numericBinop (*)),
-              ("/", numericBinop div),
-              ("mod", numericBinop mod),
-              ("quotient", numericBinop quot),
-              ("remainder", numericBinop rem)]
+primitives = [  ("+", numericBinop (+)),
+                ("-", numericBinop (-)),
+                ("*", numericBinop (*)),
+                ("/", numericBinop div),
+                ("mod", numericBinop mod),
+                ("quotient", numericBinop quot),
+                ("remainder", numericBinop rem),
+                ("=", numBoolBinop (==)),
+                ("<", numBoolBinop (<)),
+                (">", numBoolBinop (>)),
+                ("/=", numBoolBinop (/=)),
+                (">=", numBoolBinop (>=)),
+                ("<=", numBoolBinop (<=)),
+                ("&&", boolBoolBinop (&&)),
+                ("||", boolBoolBinop (||)),
+                ("string=?", strBoolBinop (==)),
+                ("string<?", strBoolBinop (<)),
+                ("string>?", strBoolBinop (>)),
+                ("string<=?", strBoolBinop (<=)),
+                ("string>=?", strBoolBinop (>=))
+              ]
 
 
 
@@ -80,6 +94,11 @@ numericBinop :: (Integer -> Integer -> Integer) -> [LispVal] -> ThrowsError Lisp
 numericBinop op           []  = throwError $ NumArgs 2 []
 numericBinop op singleVal@[_] = throwError $ NumArgs 2 singleVal
 numericBinop op params = mapM unpackNum params >>= return . Number . foldl1 op
+
+
+boolBinop :: (LispVal -> ThrowsError a) -> (a -> a -> Bool) -> [LispVal] -> ThrowsError LispVal
+boolBinop unpacker op args = i 
+
 
 
 -- old @WithoutErrorHandling
