@@ -5,7 +5,7 @@ import Parser
 import Text.ParserCombinators.Parsec hiding (spaces) -- why do we have to import it multiple times? todo: prevent importing it multiple times, 2nd import in Parse module
 
 -- we need a data type to represent an error
-data LispError = NumArgs Integer [LispVal]
+data LispError = NumArgs Integer [LispVal] -- incorrect number of arguments
                | TypeMismatch String LispVal
                | Parser ParseError -- fom the Parsec library.
                | BadSpecialForm String LispVal

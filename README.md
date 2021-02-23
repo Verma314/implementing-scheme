@@ -263,14 +263,16 @@ Read Eval.hs for more info. The code is well commented.
 Example given input "+" to ```primitives```,
 it returns us ```numericBinop (+)```, which is a partially applied function that takes a list of lispVals and adds them all up.
 
-Now, we will add ```numBoolBinop```, ```boolBoolBinop```, and ```strBoolBinop```.
+( Note that ```numericBinop (+)``` is the partial function, not ```numericBinop```)
+
+* Now, we will add ```numBoolBinop```, ```boolBoolBinop```, and ```strBoolBinop```.
 
 These new helper functions only take two arguments (each of different types), and return a ```bool```
 
 
-We create a ```boolBinop``` to abstract out the common logic between them, as they differ only in the type of arguments.
+* We create a ```boolBinop``` to abstract out the common logic between them, as they differ only in the type of arguments.
 
-```unpacker``` is a generic function that takes a LispVal and turns it into a ```ThrowsError a```, the ```a``` here can be any haskell type.
+* Note that, ```unpacker``` is a generic function that takes a LispVal and turns it into a ```ThrowsError a```, the ```a``` here can be any haskell type.
 
 You see, we have represented the orginal input as a ```LispVal```, which is very neat. It is a type that exactly represents the semantics behind a Lisp expression (represented in Haskell types).
 
@@ -278,18 +280,19 @@ Now, using the ```unpacker``` we are removing the ```Lispy-ness``` and convertin
 
 This is important, because ```apply``` indirectly calls ```unpacker```.
 
-### Here is the call sequence/summary so far
+## Here is the call sequence/summary so far
 
 1. ```main``` reads the input string using ```readExpr2```
 2. ```readExpr2``` parses the string, and converts it into some type of ```LispVal```, remember that ```LispVal``` is an ```OR```  type (i.e. it is composed of many types). ```readExpr2``` does the "classification" as well.
 3. this ```LispVal``` is then passed to ```eval``` for evaluation. 
-4. when we give ```eval``` a function application. It evaluates the operands first, and then passes the operands and the operators to ```apply```
-5. ```apply``` loooks up the given operator in our map ```primitives```
+4. when we give ```eval``` a LispVal representing a function application. It evaluates the operands first, and then passes the operands and the operators to ```apply```
+5. ```apply``` looks up the given operator in our map ```primitives```
 6. ```primitives``` returns a partially applied function based on the operator. Example ```numericBinop (+)``` 
 7. now, apply uses this partial function obtained in step 6, and "gives" it the set of operands (i.e. arguments)
-8. Note that the operands taht ```apply``` got, they had come from ```eval```, and hence they are of the type ```LispEval```(eval only returns an Either ParseError LispVal)
-9. So now we use the ```unpacker``` (or ```unpackNum```) to convert them, i.e. to bring them out of the original context. And convert them into a plain old haskell type.
-10. these functions ```numericBinop```, etc do the evaluation.
+8. Note that the operands that ```apply``` got, they had come from ```eval```, and hence they are of the type ```LispVal```(eval only returns an Either ParseError LispVal)
+
+So now we use the ```unpacker``` (or ```unpackNum```) to convert them, i.e. to bring them out of the context. And convert them into a plain old haskell type.
+9. these functions ```numericBinop```, etc do the evaluation.
 
 
 # Progress Checklist
@@ -298,8 +301,9 @@ done:
 
 - converted readExpr and Eval to use proper error handling
 - modify primitives, and numericBinop to do the same 
+- after error handling is complete, go through the entire codebase, refactor it for readability, add docs and explanations
 
 todo:
 
-
-- after error handling is complete, go through the entire codebase, refactor it for readability, add docs and explanations
+- refactor codebase to use stack, and more efficient imports
+- to add conditionals, other logical operations.

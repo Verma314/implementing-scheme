@@ -97,7 +97,25 @@ numericBinop op params = mapM unpackNum params >>= return . Number . foldl1 op
 
 
 boolBinop :: (LispVal -> ThrowsError a) -> (a -> a -> Bool) -> [LispVal] -> ThrowsError LispVal
-boolBinop unpacker op args = i 
+boolBinop unpacker op args = if length args /= 2 
+                             then throwError $ NumArgs 2 args
+                             else do
+                                  -- unpack the args, (unpack) the 1st argument, and the 2nd argument
+                                  -- apply the operator op on these values
+                                  left <- unpacker $ args !! 0 
+                                  right <- unpacker $ args !! 1
+                                  return ( Bool $ left `op` right)
+
+-- now using this general boolBinop,
+-- we can use it with different kinds of unpackers to create diffent types of boolBinOp (or BOOL BINary OPerator) functions
+-- likes ones in which the input is a number, ones in which the input is a string, etc.
+-- we have an unpackNum which can take LispVals and convert them into native haskell types.
+numBoolBinop = boolBinop unpackNum
+strBoolBinop = boolBinOp unpackStr
+boolBoolBinop = boolBinOp unpackBool
+
+
+
 
 
 
@@ -114,6 +132,7 @@ How does parsed work?
 [(12345,"")]
 -----------}
 
+-- takes a LispVal, and returns an Integer (wrapped in a context)
 unpackNum :: LispVal -> ThrowsError Integer
 unpackNum (Number n) = return n
 unpackNum (String n) = let parsed = reads n in 
@@ -122,6 +141,11 @@ unpackNum (String n) = let parsed = reads n in
                              else return $ fst $ parsed !! 0
 unpackNum (List [n]) = unpackNum n
 unpackNum notNum     = throwError $ TypeMismatch "number" notNum
+
+
+
+
+
 
 {-
 unpackNum' :: LispVal -> Integer
