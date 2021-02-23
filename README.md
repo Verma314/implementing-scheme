@@ -307,6 +307,17 @@ Example, it might return you ```numBoolBinop (<)```
 
 To which apply will further send the operands to.
 
+* Note how cool is that how much partial applications are being used here.
+
+```apply``` whose job is to (literally) apply the operator with the operand, gets the operator as a 'String'.
+
+It looks the operator up in the ```primitives```, 
+```primitives``` sees what kind of operator is that, ```primitives``` *knows* the appropritate binop (Binary Operator) method associated with each of these operators, like "+" gets the ```numericBinop (+)```.
+
+And again a partial function is returned. 
+
+```numericBinop``` (and its family) are *the* evaluation functions here. They take the operator. They take the params. (They are aware of which unpacker to use for which kind of params). And do the groundwork for evaluating our expressions. 
+
 # Pattern Matching : Conditionals 
 
 *in progress* 
