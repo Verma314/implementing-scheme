@@ -33,6 +33,7 @@ mainGhci inputExpr = do
 
 repl :: IO ()
 repl = do 
+       putStr " > "
        inputStrs <- getLine
        evaled <- return $ liftM  show $ readExpr2   (inputStrs ) >>= eval
        putStrLn $ extractValue $ trapError evaled

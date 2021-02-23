@@ -6,7 +6,7 @@ import Text.ParserCombinators.Parsec hiding (spaces) -- why do we have to import
 
 -- we need a data type to represent an error
 data LispError = NumArgs Integer [LispVal] -- incorrect number of arguments
-               | TypeMismatch String LispVal
+               | TypeMismatch String LispVal -- incorrect type given to a function
                | Parser ParseError -- fom the Parsec library.
                | BadSpecialForm String LispVal
                | NotFunction String String

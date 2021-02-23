@@ -293,7 +293,23 @@ This is important, because ```apply``` indirectly calls ```unpacker```.
 
 So now we use the ```unpacker``` (or ```unpackNum```) to convert them, i.e. to bring them out of the context. And convert them into a plain old haskell type.
 9. these functions ```numericBinop```, etc do the evaluation.
+10. ```boolBinop``` is particularly important, it takes in an arbitrary unpacker (of Lisp strings/Nums/Bool), it takes an operator, it takes in the params.
 
+```
+boolBinop :: (LispVal -> ThrowsError a) -> (a -> a -> Bool) -> [LispVal] -> ThrowsError LispVal
+```
+11. We use it to create specfic evaluation functions, like 
+```numBoolBinop = boolBinop unpackNum```
+so the partially applied ```numBoolBinop``` will be expecting an operator and a ```[LispVal]``` to evaluate the given boolean (lisp) expression at hand.
+
+Note that it is ```primitives``` itself which returns to ```apply```, a partial application of (say) ```numBoolBinop```.
+Example, it might return you ```numBoolBinop (<)```
+
+To which apply will further send the operands to.
+
+# Pattern Matching : Conditionals 
+
+*in progress* 
 
 # Progress Checklist
 

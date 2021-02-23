@@ -111,8 +111,8 @@ boolBinop unpacker op args = if length args /= 2
 -- likes ones in which the input is a number, ones in which the input is a string, etc.
 -- we have an unpackNum which can take LispVals and convert them into native haskell types.
 numBoolBinop = boolBinop unpackNum
-strBoolBinop = boolBinOp unpackStr
-boolBoolBinop = boolBinOp unpackBool
+strBoolBinop = boolBinop unpackStr
+boolBoolBinop = boolBinop unpackBool
 
 
 
@@ -158,7 +158,32 @@ unpackNum' (List [n]) = unpackNum n
 unpackNum' _ = 0  
 
 -}
+
+
+
+
+unpackStr :: LispVal -> ThrowsError String
+unpackStr (String s) = return s
+unpackStr (Number s) = return ( show s)
+unpackStr (Bool s)   = return $ show s
+unpackStr notString  = throwError $ TypeMismatch "string" notString
+
+unpackBool :: LispVal -> ThrowsError Bool
+unpackBool (Bool b) = return b
+unpackBool notBool  = throwError $ TypeMismatch "boolean" notBool
+
+
+
+
+
+
+
+
+
+
 {-
+Summary:
+
 
 Now we can do this,
 > eval (List [Atom "+", Number 1, Number 3, String "42345"])
@@ -173,4 +198,10 @@ AND also this,
 > 
 > mainGhci "(+ 1 2 3 (* 4 5))"
 26
+
+
+
+
+
+
 -}
