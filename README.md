@@ -322,7 +322,9 @@ And again a partial function is returned.
 
  As with standard Scheme, our evaluator considers #f to be false and any other value to be true.
 
- Quite trivial,
+## if / else
+
+ This can be added simply by adding an eval clause. The expressions which are inside the if statements (like the conditional), and the two alternatives will use other eval patterns that we have already implemented quite trivially.
  ```
 eval (List [Atom "if", pred, conseq, alt ] ) = do
                                                -- evaluate the predicate
