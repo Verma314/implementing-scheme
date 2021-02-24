@@ -10,6 +10,18 @@ eval val@(Atom _) = return val -- this is not correct
 eval val@(String _) = return val
 eval val@(Number _) = return val
 eval val@(Bool _) = return val
+eval (List [Atom "if", pred, conseq, alt ] ) = do
+                                               -- evaluate the predicate
+                                               result <- eval pred  
+                                               case result of 
+                                                    Bool False -> eval alt
+                                                    otherwise  -> eval conseq
+eval (List [Atom "if", pred, Atom "then", conseq, Atom "else", alt ] ) = do
+                                               -- evaluate the predicate
+                                               result <- eval pred  
+                                               case result of 
+                                                    Bool False -> eval alt
+                                                    otherwise  -> eval conseq
 eval (List [Atom "quote", val]) = return val 
 --  The last clause is our first introduction to nested patterns. 
 -- The type of data contained by List is [LispVal], a list of LispVals. We match that against the specific two-element list [Atom "quote", val], a list where the first element is the symbol "quote" and the second element can be anything. Then we return that second element.

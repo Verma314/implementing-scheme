@@ -320,7 +320,20 @@ And again a partial function is returned.
 
 # Pattern Matching : Conditionals 
 
-*in progress* 
+ As with standard Scheme, our evaluator considers #f to be false and any other value to be true.
+
+ Quite trivial,
+ ```
+eval (List [Atom "if", pred, conseq, alt ] ) = do
+                                               -- evaluate the predicate
+                                               result <- eval pred  
+                                               case result of 
+                                                    Bool False -> eval alt
+                                                    otherwise  -> eval conseq
+```                                                    
+
+
+
 
 # Progress Checklist
 
