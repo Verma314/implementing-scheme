@@ -286,6 +286,9 @@ This is important, because ```apply``` indirectly calls ```unpacker```.
 2. ```readExpr2``` parses the string, and converts it into some type of ```LispVal```, remember that ```LispVal``` is an ```OR```  type (i.e. it is composed of many types). ```readExpr2``` does the "classification" as well.
 3. this ```LispVal``` is then passed to ```eval``` for evaluation. 
 4. when we give ```eval``` a LispVal representing a function application. It evaluates the operands first, and then passes the operands and the operators to ```apply```
+
+Note that ```eval``` calls ```apply``` only for one pattern -- when we give it a "lisp function application". i.e. give it a function to evaluate.
+
 5. ```apply``` looks up the given operator in our map ```primitives```
 6. ```primitives``` returns a partially applied function based on the operator. Example ```numericBinop (+)``` 
 7. now, apply uses this partial function obtained in step 6, and "gives" it the set of operands (i.e. arguments)
@@ -368,6 +371,9 @@ We define a function ```car``` which takes a ```[LispVal]``` and returns ```Thro
 
 (read the List Primitives section here,
 https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/Evaluation,_Part_2#List_Primitives:_car,_cdr,_and_cons)
+
+
+We implement these list operations. And then add them to our function dictionary i.e. ```primitives```, so that they can be used by the evaluation function ```apply```.
 
 
 
