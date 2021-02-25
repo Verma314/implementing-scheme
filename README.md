@@ -12,8 +12,8 @@ ghci -package mtl-2.2.2
 
 then in Prelude
 ```
->:l Main.hs
->ghciMain
+ghci >:l Main.hs
+ghci > repl
 ```
 
 
@@ -334,18 +334,60 @@ eval (List [Atom "if", pred, conseq, alt ] ) = do
                                                     otherwise  -> eval conseq
 ```                                                    
 
+# Implementing List Primitives
+
+
+### Implementing ```car```, ```cdr``` and ```cons```
+
+Examples of ```car``` in Scheme
+
+```
+(car '(a b c)) = a
+(car '(a)) = a
+(car '(a b . c)) = a
+(car 'a) = error – not a list
+(car 'a 'b) = error – car only takes one argument
+````
+
+
+Examples for ```cdr``` in Scheme,
+```
+(cdr '(a b c)) = (b c)
+(cdr '(a b)) = (b)
+(cdr '(a)) = NIL
+(cdr '(a . b)) = b
+(cdr '(a b . c)) = (b . c)
+(cdr 'a) = error – not a list
+(cdr 'a 'b) = error – too many arguments
+```
+
+We will directly implement these functions in our interpreter, as they're quite trivial to implement.
+
+We define a function ```car``` which takes a ```[LispVal]``` and returns ```ThrowsError LispVal```
+
+
+(read the List Primitives section here,
+https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/Evaluation,_Part_2#List_Primitives:_car,_cdr,_and_cons)
+
+
 
 
 
 # Progress Checklist
+
+
+todo:
+
+- adding list primitives
+- building a proper repl
+- adding variables and assignments
+- adding support for definings functions
+- refactor codebase to use stack, and more efficient imports
 
 done:
 
 - converted readExpr and Eval to use proper error handling
 - modify primitives, and numericBinop to do the same 
 - after error handling is complete, go through the entire codebase, refactor it for readability, add docs and explanations
-
-todo:
-
-- refactor codebase to use stack, and more efficient imports
 - to add conditionals, other logical operations.
+

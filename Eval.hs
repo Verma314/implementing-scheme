@@ -4,6 +4,8 @@ import Parser
 import ErrorCatcher
 import Control.Monad.Except
 
+import ListOps
+
 -- this shall help us evaluate LispVals, and then return a LispVal
 eval :: LispVal -> ThrowsError LispVal
 eval val@(Atom _) = return val -- this is not correct
@@ -96,8 +98,11 @@ primitives = [  ("+", numericBinop (+)),
                 ("string<?", strBoolBinop (<)),
                 ("string>?", strBoolBinop (>)),
                 ("string<=?", strBoolBinop (<=)),
-                ("string>=?", strBoolBinop (>=))
-              ]
+                ("string>=?", strBoolBinop (>=)),
+                ("car", car),
+                ("cdr", cdr),
+                ("cons", cons),
+                ("eq?", eqv)] -- note how we dont need partial functions application for these list operations
 
 
 
