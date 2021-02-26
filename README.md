@@ -340,7 +340,7 @@ eval (List [Atom "if", pred, conseq, alt ] ) = do
 # Implementing List Primitives
 
 
-### Implementing ```car```, ```cdr``` and ```cons```
+## Implementing ```car```, ```cdr``` and ```cons```
 
 Examples of ```car``` in Scheme
 
@@ -377,12 +377,41 @@ We implement these list operations. And then add them to our function dictionary
 
 
 
+## Weak Typing
+
+
+We introduce a function ```equal?``` which checks for equality regardless of the type of the value.
+
+Example, we have ```eqv```
+```
+(eqv? 2 "2") = #f
+```
+We want to implement ```equal?```, such that
+```
+(equal? 2 "2") = #t
+```
+To do this we need to use a GHC extension i.e. *Existential Types*,
+which lets us create a heterogenous list.
+
+
+### **How do we implmenet ```equal?```**
+
+From the book,
+*We try all our unpack functions, and if any of them return Haskell values that are equal, we return True.
+
+We store all the unpacking functions in a list, and use mapM to execute them in turn*
+
+
+So, we define a **data type** that can hold any function of the form ```LispVal -> something```, where the type ```something``` s is of the type ```Eq``` (that is, supports equality).
+
+
+
 
 
 # Progress Checklist
 
 
-todo:
+### todo:
 
 - adding list primitives
 - building a proper repl
