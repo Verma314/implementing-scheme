@@ -1,3 +1,6 @@
+{-# LANGUAGE ExistentialQuantification #-}
+
+
 module Eval where
 
 import Parser    
@@ -102,7 +105,9 @@ primitives = [  ("+", numericBinop (+)),
                 ("car", car),
                 ("cdr", cdr),
                 ("cons", cons),
-                ("eq?", eqv)] -- note how we dont need partial functions application for these list operations
+                ("eq?", eqv),
+                ("eqv?", eqv),
+                ("equal?", equal)] -- note how we dont need partial functions application for these list operations
 
 
 
@@ -216,9 +221,39 @@ AND also this,
 > mainGhci "(+ 1 2 3 (* 4 5))"
 26
 
+-}
+
+
+--------------------------------------------------------------------------------
+--------------------------  Implementing ```equal?``` --------------------------
+
+
+data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> ThrowsError a)
+
+unpackEquals :: LispVal -> LispVal -> Unpacker -> ThrowsError Bool
+unpackEquals arg1 arg2 (AnyUnpacker unpacker) = 
+             do unpacked1 <- unpacker arg1
+                unpacked2 <- unpacker arg2
+                return $ unpacked1 == unpacked2
+        `catchError` (const $ return False)
 
 
 
+equal :: [LispVal] -> ThrowsError LispVal
+equal [arg1, arg2] = do
+      primitiveEquals <- liftM or $ mapM (unpackEquals arg1 arg2) 
+                         [AnyUnpacker unpackNum, AnyUnpacker unpackStr, AnyUnpacker unpackBool]
+      eqvEquals <- eqv [arg1, arg2]
+      return $ Bool $ (primitiveEquals || let (Bool x) = eqvEquals in x)
+equal badArgList = throwError $ NumArgs 2 badArgList
 
+{-
+https://stackoverflow.com/questions/31763252/how-does-liftm-work
+
+Function liftM turns a function which takes input and produces output to a function which takes input in some monad and produces output in the same monad. Lets look at its definition:
+
+liftM :: Monad m => (a -> b) -> m a -> m b
+liftM f mx = mx >>= \x -> return (f x)
 
 -}
+
