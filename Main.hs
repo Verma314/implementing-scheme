@@ -50,6 +50,11 @@ repl_old = do
 ------------------ Building a repl ----------------------
 ---------------------------------------------------------
 
+-- in my opinion, this repl is overkill and no much better than
+-- the previous repl that I had implemented.
+-- i.e. repl_old
+
+
 -- helper functions:
 flushStr :: String -> IO ()
 flushStr str = putStr str >> hFlush stdout

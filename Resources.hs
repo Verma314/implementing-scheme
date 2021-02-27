@@ -1,14 +1,15 @@
 ### Haskell resources 
 
-- https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/Parsing
+- 'Hasekll LLVM tutorial' Writing a JIT compiler in Haskell : https://www.stephendiehl.com/llvm/
 
-- http://www.defmacro.org/ramblings/lisp.html
+- The book accompaning this repo : https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/
 
-- Chapter 16 Parsec: http://book.realworldhaskell.org/read/using-parsec.html
 
-- Write you a Haskell 
+- 'Write you a Haskell - http://dev.stephendiehl.com/fun/
 
-- Hasekll LLVM tutorial
+#### Parsing
+
+-  Chapter 16 Parsec: http://book.realworldhaskell.org/read/using-parsec.html
 
 
 ### Resources on Scheme 

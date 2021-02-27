@@ -1,8 +1,16 @@
 # Implementing an interpreter for Scheme in Haskell
 
-Notes I made while learning how to write a Scheme interpreter, using the book 
+Implementation of Scheme in Haskell. Accompanied by motes I made while learning about this, from the book.
 
 https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
+
+
+The purpose of this repo is,
+1. To get better at writing applications in Haskell.
+2. To learn about how to write interpreters quickly.
+3. As background material before reading/implementing more advanced compilers in haskell. 
+
+The only (small) added benefit of this repo is that the code here is broken down into modules, unlike in the book; and a few comments on haskell functions that might be tricky. 
 
 
 # How to run the interpreter
