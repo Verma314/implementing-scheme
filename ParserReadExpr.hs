@@ -11,7 +11,7 @@ import Text.ParserCombinators.Parsec hiding (spaces)
 readExpr2 :: String -> ThrowsError LispVal -- same as : Either LispError LispVal
 readExpr2 input = case parse parseExpr "lisp" input of
     Left err ->   throwError ( Parser err )
-    -- here abobe we wanna return "Left LispError", 
+    -- here above we wanna return "Left LispError", 
     -- so something like return (Parser err), or Left (Parser err) would also work. 
     -- We use throwError (as it can also put an error value into a Left data constructor) 
     Right val ->  return (val ) 

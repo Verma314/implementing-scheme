@@ -11,7 +11,7 @@ The purpose of this repo is,
 3. As background material before reading/implementing more advanced compilers in haskell. 
 
 The only (small) added benefit of this repo is that the code here is broken down into modules, unlike in the book; and a comments on haskell functions that might be tricky have been added.
-It is a work in progress, I want to convert it into a ```stack``` project, improve modularity, etc.
+It is a work in progress, I want to convert it into a ```stack``` project, improve modularity, adding libraries, etc.
 
 # How to run the interpreter
 ```
@@ -448,6 +448,34 @@ runRepl = until_ (== "quit") (readPrompt "Lisp>>> ") evalAndPrint
 See the ```Building a repl``` in the ```Main.hs``` module for the implementation, and comments.
 
 
+# Implementing variables and assignment
+
+
+We have to implmenet a runtime environment. Which includes variables, function calls, nested scope etc. Furthermore, Scheme lets us change values associate with a variable. Hence we have to do "stateful" computations to implement this.
+
+From the book:
+**we use a feature called ```state threads```, letting Haskell manage the aggregate state for us. This lets us treat mutable variables as we would in any other programming language, using functions to get or set variables. There are two flavors of state threads: the ```ST``` monad creates a stateful computation that can be executed as a unit, without the state escaping to the rest of the program. The IORef module lets you use stateful variables within the IO monad. Since our state has to be interleaved with IO anyway (it persists between lines in the REPL, and we will eventually have IO functions within the language itself), we'll be using IORefs.**
+
+Anything that is inside the ```IORef``` context is mutable.
+
+
+(Check out monad transformers,  especially the ExceptT monad transformer
+
+https://www.seas.upenn.edu/~cis552/17fa/lectures/stub/Transformers.html
+
+https://en.wikibooks.org/wiki/Haskell/Monad_transformers)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -460,6 +488,7 @@ See the ```Building a repl``` in the ```Main.hs``` module for the implementation
 
 ### todo:
 
+- to understand monad transformers before proceeding.
 - adding variables and assignments
 - adding support for definings functions
 - refactor codebase to use stack, and more efficient imports
