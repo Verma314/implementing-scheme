@@ -102,7 +102,7 @@ parseAtom = do
 We need to use ```liftM``` here,it is a monadic function, kinda similar to fmap.
 ```
 *Main Control.Monad> :t liftM
-liftM :: Monad m => (a1 -> r) -> m a1 -> m r
+liftM :: Monad m => (a -> b) -> m a -> m b:T::
 
 > :t (fmap)
 (fmap) :: Functor f => (a -> b) -> f a -> f b
@@ -404,23 +404,62 @@ We store all the unpacking functions in a list, and use mapM to execute them in 
 
 So, we define a **data type** that can hold any function of the form ```LispVal -> something```, where the type ```something``` s is of the type ```Eq``` (that is, supports equality).
 
+```
+data Unpacker = forall a. Eq a => AnyUnpacker (LispVal -> ThrowsError a)
+```
+
+*"For any type that is an instance of Eq, you can define an Unpacker that takes a function from LispVal to that type, and may throw an error"
+We'll have to wrap our functions with the ```AnyUnpacker``` constructor, and then we can create a list of Unpacker*
+
+Why does this work?
+
+Because the unpack<XYZ> (example, unpackStr) can also accept LispVal which are Strings, or Numbers, or Bools, etc. They don't just take the String LispVal. Example,
+```
+*Eval> unpackStr (String "123")
+Right "123"
+*Eval> unpackStr (Number 123)
+Right "123"
+```
+
+
+# Building a proper repl
+
+We want to build a repl such that later expressions can reference variables set by earlier ones.
+
+
+We want to read input, perform a function, and print the output, all in an infinite loop. (Until a certain condition is true.)
+
+We implement our own looping construct ```until_```,
+the end result would look something like this:
+
+```
+runRepl = until_ (== "quit") (readPrompt "Lisp>>> ") evalAndPrint
+```
+
+
+See the ```Building a repl``` in the ```Main.hs``` module for the implementation, and comments.
+
+
+
+
+
+
 
 
 
 
 # Progress Checklist
 
-
 ### todo:
 
-- adding list primitives
-- building a proper repl
 - adding variables and assignments
 - adding support for definings functions
 - refactor codebase to use stack, and more efficient imports
 
 done:
 
+- building a proper repl
+- adding list primitives
 - converted readExpr and Eval to use proper error handling
 - modify primitives, and numericBinop to do the same 
 - after error handling is complete, go through the entire codebase, refactor it for readability, add docs and explanations

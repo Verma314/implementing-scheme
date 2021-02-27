@@ -5,7 +5,6 @@ import ErrorCatcher
 import Control.Monad.Except
 
 
-
 -- all the functions in this module have been directly imported from 
 -- https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/Evaluation,_Part_2#List_Primitives:_car,_cdr,_and_cons
 
