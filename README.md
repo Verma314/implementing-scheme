@@ -488,13 +488,13 @@ https://en.wikibooks.org/wiki/Haskell/Monad_transformers)
 
 ### todo:
 
-- to understand monad transformers before proceeding.
 - adding variables and assignments
 - adding support for definings functions
 - refactor codebase to use stack, and more efficient imports
 
 done:
 
+- to understand monad transformers before proceeding (I *kinda* do now)
 - building a proper repl
 - adding list primitives
 - converted readExpr and Eval to use proper error handling
