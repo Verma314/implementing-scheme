@@ -456,14 +456,16 @@ We have to implmenet a runtime environment. Which includes variables, function c
 From the book:
 **we use a feature called ```state threads```, letting Haskell manage the aggregate state for us. This lets us treat mutable variables as we would in any other programming language, using functions to get or set variables. There are two flavors of state threads: the ```ST``` monad creates a stateful computation that can be executed as a unit, without the state escaping to the rest of the program. The IORef module lets you use stateful variables within the IO monad. Since our state has to be interleaved with IO anyway (it persists between lines in the REPL, and we will eventually have IO functions within the language itself), we'll be using IORefs.**
 
+IORef (like the ST Monad) is a 'state thread', 
+these let you do stateful computations that can be executed as a unit, without the state escaping to the rest of the progr
+
+
 Anything that is inside the ```IORef``` context is mutable.
 
-
 (Check out monad transformers,  especially the ExceptT monad transformer
-
 https://www.seas.upenn.edu/~cis552/17fa/lectures/stub/Transformers.html
-
 https://en.wikibooks.org/wiki/Haskell/Monad_transformers)
+
 
 
 
