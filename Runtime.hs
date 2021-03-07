@@ -69,6 +69,20 @@ isBound envRef var = readIORef envRef >>= return . maybe False (const True) . lo
 
 
 
+-- a function to retrieve the current value of a variable:
+getVar :: Env -> String -> IOThrowsError LispVal
+getVar envRef var  =  do env <- liftIO $ readIORef envRef
+                         maybe (throwError $ UnboundVar "Getting an unbound variable" var)
+                               (liftIO . readIORef)
+                               (lookup var env)
+-- readIORef takes the IORef into the IO context.
+-- liftIO takes values from IO Context, and into the IOThrowsError context 
+
+
+-- a function to set values:
+
+
+
 
 
 
