@@ -80,9 +80,16 @@ getVar envRef var  =  do env <- liftIO $ readIORef envRef
 
 
 -- a function to set values:
+setVar :: Env -> String -> LispVal -> IOThrowsError LispVal
+setVar envRef var value = do env <- liftIO $ readIORef envRef
+                             maybe (throwError $ UnboundVar "Setting an unbound variable" var)
+                             (liftIO . (flip writeIORef value)) -- writeIORef does the mutation of IORef, but does it in an "incorrect" order, hence the flip
+                             (lookup var env)
+                             return value
+                             
+                              
 
 
 
-
-
+-- to do: notes on IORef, notes on liftIO
 
