@@ -491,7 +491,6 @@ Check the file ```Runtime.hs``` for implementation of the runtime env.
 
 ### todo:
 
-- adding variables and assignments
 - add notes on IORef, notes on liftIO
 - add explanation on the function ```bindVars```.
 - explore more about ```IORef```. Currently, my understanding of it involves a lot of guesswork.
@@ -500,6 +499,7 @@ Check the file ```Runtime.hs``` for implementation of the runtime env.
 
 done:
 
+- adding variables and assignments
 - to understand monad transformers before proceeding (I *kinda* do now)
 - building a proper repl
 - adding list primitives
