@@ -83,11 +83,36 @@ getVar envRef var  =  do env <- liftIO $ readIORef envRef
 setVar :: Env -> String -> LispVal -> IOThrowsError LispVal
 setVar envRef var value = do env <- liftIO $ readIORef envRef
                              maybe (throwError $ UnboundVar "Setting an unbound variable" var)
-                             (liftIO . (flip writeIORef value)) -- writeIORef does the mutation of IORef, but does it in an "incorrect" order, hence the flip
-                             (lookup var env)
-                             return value
-                             
+                                   (liftIO . (flip writeIORef value))
+                                   (lookup var env)
+                             return value                             
                               
+
+
+-- implementing define,
+-- which sets a variable if already bound or creates a new one if not
+defineVar :: Env -> String -> LispVal -> IOThrowsError LispVal
+defineVar envRef var value = do
+     alreadyDefined <- liftIO $ isBound envRef var
+     if alreadyDefined
+        then setVar envRef var value >> return value
+        else liftIO $ do
+             valueRef <- newIORef value
+             env <- readIORef envRef
+             writeIORef envRef ((var, valueRef) : env)
+             return value
+
+
+-- todo: add explanation
+bindVars :: Env -> [(String, LispVal)] -> IO Env
+bindVars envRef bindings = readIORef envRef >>= extendEnv bindings >>= newIORef
+     where extendEnv bindings env = liftM (++ env) (mapM addBinding bindings)
+           addBinding (var, value) = do ref <- newIORef value
+                                        return (var, ref)
+
+
+
+
 
 
 

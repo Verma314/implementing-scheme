@@ -8,6 +8,33 @@ import ErrorCatcher
 import Control.Monad.Except
 
 import ListOps
+import Runtime
+eval :: Env -> LispVal -> IOThrowsError LispVal
+eval env val@(String _) = return val
+eval env val@(Number _) = return val
+eval env val@(Bool _) = return val
+eval env (Atom id) = getVar env id
+eval env (List [Atom "quote", val]) = return val
+eval env (List [Atom "if", pred, conseq, alt]) =
+     do result <- eval env pred
+        case result of
+             Bool False -> eval env alt
+             otherwise -> eval env conseq
+eval env (List [Atom "set!", Atom var, form]) =
+     eval env form >>= setVar env var
+eval env (List [Atom "define", Atom var, form]) =
+     eval env form >>= defineVar env var
+eval env (List (Atom func : args)) = mapM (eval env) args >>= liftThrows . apply func
+eval env badForm = throwError $ BadSpecialForm "Unrecognized special form" badForm
+
+
+
+{------------
+
+This has been deprecated because we want to create a runtime environment.
+
+Since haskell has no global variables, we need to pass the runtime environment ```env``` in all these evals,
+
 
 -- this shall help us evaluate LispVals, and then return a LispVal
 eval :: LispVal -> ThrowsError LispVal
@@ -35,6 +62,9 @@ eval (List [Atom "quote", val]) = return val
 -- and then apply the operator to the result
 eval (List ((Atom operator) : args)) =  mapM eval args >>= apply operator
 eval badForm = throwError $ BadSpecialForm "Unrecognized special form" badForm
+-----------}
+
+
 
 -- examples: 
 -- evaluation of eval (List ((Atom operator) : args)) 

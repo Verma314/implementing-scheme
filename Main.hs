@@ -10,10 +10,12 @@ import Control.Monad
 import System.Environment
 import System.IO
 
+import Runtime
 -- Notes:
 -- 1. We deprecated readExpr 
 -- 
 
+{-
 -- old
 main2' :: IO ()
 main2' = do
@@ -25,12 +27,13 @@ main2' = do
 main' :: IO ()
 main' = getArgs >>= print . eval . readExpr . head
 
+-}
 
 {-
 mainGhci :: String -> IO ()
 mainGhci inputExpr = do 
                      (print . eval. readExpr ) inputExpr
--}
+
 
 repl_old :: IO ()
 repl_old = do 
@@ -45,7 +48,7 @@ repl_old = do
        -- after which it is converted to a string.
        -- then put the value into an IO context.
 
-
+-}
 ---------------------------------------------------------
 ------------------ Building a repl ----------------------
 ---------------------------------------------------------
@@ -67,17 +70,23 @@ readPrompt :: String -> IO String
 readPrompt prompt = flushStr prompt >> getLine
 -- prints out a prompt, and reads in a line of input.
 
+evalString :: Env -> String -> IO String
+evalString env expr = runIOThrows $ liftM show $ (liftThrows $ readExpr2 expr) >>= eval env
 
-evalString :: String -> IO String
-evalString expr = return $ extractValue $ trapError (liftM show $ readExpr2 expr >>= eval)
+
+--evalString' :: String -> IO String
+--evalString' expr = return $ extractValue $ trapError (liftM show $ readExpr2 expr >>= eval)
        -- above readExpr2  inputStrs generates a 'ThrowsError LispVal'
        -- the LispVal is piped into the eval,
        -- which returns a "Either LispError LispVal"
        -- after error handling, it is put back in the IO context (using return)
 
 
-evalAndPrint :: String -> IO ()
-evalAndPrint expr =  evalString expr >>= putStrLn
+evalAndPrint :: Env -> String -> IO ()
+evalAndPrint env expr =  evalString env expr >>= putStrLn
+
+--evalAndPrint' :: String -> IO ()
+--evalAndPrint' expr =  evalString expr >>= putStrLn
 -- a function that evaluates a string and prints the result:       
 
 
@@ -95,9 +104,14 @@ until_ predicate prompt action = do
           -- else call the action
           else action result >> until_ predicate prompt action   
 
+runOne :: String -> IO ()
+runOne expr = nullEnv >>= flip evalAndPrint expr
 
 runRepl :: IO ()
-runRepl = until_ (== "quit") (readPrompt "Lisp>>> ") evalAndPrint
+runRepl = nullEnv >>= until_ (== "quit") (readPrompt "> ") . evalAndPrint
+
+--runRepl :: IO ()
+--runRepl = until_ (== "quit") (readPrompt "Lisp>>> ") evalAndPrint
 
 repl = runRepl
 
@@ -105,6 +119,6 @@ main :: IO ()
 main = do args <- getArgs
           case length args of
                0 -> runRepl
-               1 -> evalAndPrint $ args !! 0
+               1 -> runOne $ args !! 0
                otherwise -> putStrLn "Program takes only 0 or 1 argument"
 

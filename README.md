@@ -8,10 +8,10 @@ https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours
 The purpose of this repo is,
 1. To get better at writing applications in Haskell.
 2. To learn about how to write interpreters quickly.
-3. As background material before reading/implementing more advanced compilers in haskell. 
+3. As background material before reading/implementing more advanced compilers/interpreters in haskell, and compilers/interpreters in general.
 
 The only (small) added benefit of this repo is that the code here is broken down into modules, unlike in the book; and a comments on haskell functions that might be tricky have been added.
-It is a work in progress, I want to convert it into a ```stack``` project, improve modularity, adding libraries, etc.
+It is a work in progress, I want to convert it into a ```stack``` project, improve modularity, adding proper libraries, etc.
 
 # How to run the interpreter
 ```
@@ -493,6 +493,7 @@ Check the file ```Runtime.hs``` for implementation of the runtime env.
 
 - adding variables and assignments
 - add notes on IORef, notes on liftIO
+- add explanation on the function ```bindVars```.
 - explore more about ```IORef```. Currently, my understanding of it involves a lot of guesswork.
 - adding support for definings functions
 - refactor codebase to use stack, and more efficient imports
