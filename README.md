@@ -472,7 +472,9 @@ Check the file ```Runtime.hs``` for implementation of the runtime env.
 
 
 
+# Implementing 'Function Definitions'
 
+*in progress*
 
 
 
@@ -491,10 +493,11 @@ Check the file ```Runtime.hs``` for implementation of the runtime env.
 
 ### todo:
 
+- adding support for definings functions
+
 - add notes on IORef, notes on liftIO
 - add explanation on the function ```bindVars```.
 - explore more about ```IORef```. Currently, my understanding of it involves a lot of guesswork.
-- adding support for definings functions
 - refactor codebase to use stack, and more efficient imports
 
 done:

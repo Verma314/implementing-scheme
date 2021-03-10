@@ -35,7 +35,9 @@ data LispVal = Atom String -- function names are represted as an Atom
              | Number Integer
              | String String
              | Bool Bool -- deriving (Show)
-
+             -- | PrimitiveFunc ([LispVal] -> ThrowsError LispVal)
+             -- | Func { params :: [String], vararg :: (Maybe String),
+             --           body :: [LispVal], closure :: Env }   
 
 
 -- this is so that _after_ we have our target LispVal, we can convert them back into nice syntax

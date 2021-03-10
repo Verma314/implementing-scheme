@@ -1,6 +1,4 @@
 {-# LANGUAGE ExistentialQuantification #-}
-
-
 module Eval where
 
 import Parser    
